@@ -16,7 +16,7 @@ import { RefinedResponse, ResponseType } from "k6/http";
 
 interface ApiResponse {
   message: string;
-  hostname: string;
+  machineName: string;
   timestamp: string;
 }
 
@@ -46,21 +46,21 @@ export default function (): void {
 
   check(res, {
     "status is 200": (r) => r.status === 200,
-    "has hostname": (r) => {
+    "has machineName": (r) => {
       try {
         const body = JSON.parse(r.body as string) as ApiResponse;
-        return body.hostname !== undefined;
+        return body.machineName !== undefined;
       } catch {
         return false;
       }
     },
   });
 
-  // Tag the metric with the replica hostname so the k6 summary
+  // Tag the metric with the replica machineName so the k6 summary
   // shows how requests were distributed across replicas
   try {
     const body = JSON.parse(res.body as string) as ApiResponse;
-    replicaHits.add(1, { replica: body.hostname });
+    replicaHits.add(1, { replica: body.machineName });
   } catch {
     // ignore parse errors
   }

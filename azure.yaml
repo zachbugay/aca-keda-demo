@@ -1,0 +1,15 @@
+name: aca-keda-demo
+metadata:
+  template: aca-keda-demo@0.0.1
+services:
+  api:
+    project: ./src/Api
+    language: dotnet
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: .
+      registry: mcr.microsoft.com
+      remoteBuild: true
+infra:
+  provider: terraform

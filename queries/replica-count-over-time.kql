@@ -1,0 +1,10 @@
+// Replica count over time
+// Uses ContainerAppSystemLogs_CL to track when new replicas were provisioned.
+// Counts the distinct replicas seen in console logs per 1-minute window
+// to approximate the active replica count over time.
+// Replace <CONTAINER_APP_NAME> with your app name
+ContainerAppConsoleLogs_CL
+| where ContainerAppName_s == "<CONTAINER_APP_NAME>"
+| summarize ReplicaCount = dcount(ContainerGroupName_g) by TimeBin = bin(TimeGenerated, 1m)
+| order by TimeBin asc
+| render timechart

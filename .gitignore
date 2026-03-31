@@ -1,0 +1,35 @@
+# Azure Developer CLI
+.azure/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.tfvars
+*.tfvars.json
+
+# Node (k6 load test build)
+node_modules/
+scripts/dist/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.vs/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store

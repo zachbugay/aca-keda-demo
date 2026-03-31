@@ -1,0 +1,13 @@
+// Scaling events from the Container Apps system logs
+// Shows revision provisioning, activation, and deactivation events
+// Replace <CONTAINER_APP_NAME> with your app name (e.g., ca-api-myenv)
+ContainerAppSystemLogs_CL
+| where ContainerAppName_s == "<CONTAINER_APP_NAME>"
+| where Log_s has_any ("provisioned", "Provisioning", "Activating", "Deactivating", "scaling", "replica")
+| project
+    Timestamp = TimeGenerated,
+    AppName   = ContainerAppName_s,
+    Revision  = RevisionName_s,
+    Message   = Log_s
+| order by Timestamp desc
+| take 100

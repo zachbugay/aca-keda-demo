@@ -1,0 +1,10 @@
+// Request distribution over time per replica
+// Shows how requests were spread across replicas in 1-minute time bins.
+// This visualises the scale-out effect — more replicas appear as load increases.
+// Replace <CONTAINER_APP_NAME> with your app name
+ContainerAppConsoleLogs_CL
+| where ContainerAppName_s == "<CONTAINER_APP_NAME>"
+| where Log_s has "Request handled by replica"
+| summarize RequestCount = count() by Replica = ContainerGroupName_g, TimeBin = bin(TimeGenerated, 1m)
+| order by TimeBin asc, Replica asc
+| render timechart

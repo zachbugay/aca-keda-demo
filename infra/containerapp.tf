@@ -33,6 +33,7 @@ resource "azurerm_container_app" "api" {
     min_replicas = 0
     max_replicas = var.max_replicas
     polling_interval_in_seconds = 30
+    cooldown_period_in_seconds = 30
 
     container {
       name   = "api"

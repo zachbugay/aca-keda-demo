@@ -1,6 +1,6 @@
 # Azure Container Apps – KEDA HTTP Scaling Demo
 
-Demonstrates automatic horizontal scaling on Azure Container Apps using a **KEDA HTTP scaling rule**. A .NET 8 minimal API returns its hostname in every response, letting you observe requests distributing across replicas as the app scales out under load.
+Demonstrates automatic horizontal scaling on Azure Container Apps using a **KEDA HTTP scaling rule**. A .NET 8 minimal API returns its machineName in every response, letting you observe requests distributing across replicas as the app scales out under load.
 
 Provisioned entirely via **Azure Developer CLI (`azd`)** with **Terraform** as the IaC provider.
 
@@ -41,7 +41,7 @@ Provisioned entirely via **Azure Developer CLI (`azd`)** with **Terraform** as t
 
 ## Quick Start
 
-```bash
+```PowerShell
 # 1. Clone and navigate into the repo
 cd aca-keda-demo
 
@@ -61,22 +61,22 @@ azd up
 
 After `azd up` completes, grab the app URL:
 
-```bash
+```PowerShell
 # Print the app URL
-azd env get-value SERVICE_API_ENDPOINT_URL
+$ACA_ENDPOINT= $(azd env get-value SERVICE_API_ENDPOINT_URL)
 ```
 
 Verify it works:
 
-```bash
-curl https://<your-app-fqdn>/
-# → { "message": "Hello from the KEDA HTTP scaling demo!", "hostname": "...", "timestamp": "..." }
+```PowerShell
+curl $ACA_ENDPOINT
+# → { "message": "Hello from the KEDA HTTP scaling demo!", "machineName": "...", "timestamp": "..." }
 ```
 
 Run the k6 load test (ramps to 50 virtual users for 60 seconds):
 
-```bash
-k6 run -e TARGET_URL=https://<your-app-fqdn> scripts/load-test.js
+```PowerShell
+k6 run -e TARGET_URL=$ACA_ENDPOINT scripts/load-test.js
 ```
 
 ## Observe Scaling
@@ -85,10 +85,10 @@ k6 run -e TARGET_URL=https://<your-app-fqdn> scripts/load-test.js
 
 While the load test runs, check active replicas:
 
-```bash
+```PowerShell
 # Get the resource group and app name
-RG=$(azd env get-value AZURE_RESOURCE_GROUP)
-APP=$(azd env get-value AZURE_CONTAINER_APP_NAME)
+$RG=$(azd env get-value AZURE_RESOURCE_GROUP)
+$APP=$(azd env get-value AZURE_CONTAINER_APP_NAME)
 
 # List replicas (shows multiple replicas during load)
 az containerapp replica list -n $APP -g $RG -o table
@@ -107,8 +107,8 @@ You'll see the replica count spike during the load test and drop back after cool
 
 Navigate to **Log Analytics workspace → Logs** in the Azure portal, or use the CLI:
 
-```bash
-WORKSPACE_ID=$(azd env get-value AZURE_LOG_ANALYTICS_WORKSPACE_ID)
+```PowerShell
+$WORKSPACE_ID=$(azd env get-value AZURE_LOG_ANALYTICS_WORKSPACE_ID)
 ```
 
 > **Note**: Log Analytics has an ingestion delay of 2–5 minutes. Wait a few minutes after the load test before running queries.
@@ -136,7 +136,7 @@ Request counts per replica — proves traffic was distributed across scaled-out 
 ContainerAppConsoleLogs_CL
 | where ContainerAppName_s == "<CONTAINER_APP_NAME>"
 | where Log_s has "Request handled by replica"
-| summarize RequestCount = count() by Replica = ContainerGroupName_g
+| summarize RequestCount = count() by Replica = ContainerGroupName_s
 | order by RequestCount desc
 ```
 
@@ -148,7 +148,7 @@ Time-series view of requests per replica in 1-minute bins — visualises scale-o
 ContainerAppConsoleLogs_CL
 | where ContainerAppName_s == "<CONTAINER_APP_NAME>"
 | where Log_s has "Request handled by replica"
-| summarize RequestCount = count() by Replica = ContainerGroupName_g, TimeBin = bin(TimeGenerated, 1m)
+| summarize RequestCount = count() by Replica = ContainerGroupName_s, TimeBin = bin(TimeGenerated, 1m)
 | order by TimeBin asc, Replica asc
 | render timechart
 ```
@@ -160,7 +160,7 @@ Approximate active replica count per minute:
 ```kql
 ContainerAppConsoleLogs_CL
 | where ContainerAppName_s == "<CONTAINER_APP_NAME>"
-| summarize ReplicaCount = dcount(ContainerGroupName_g) by TimeBin = bin(TimeGenerated, 1m)
+| summarize ReplicaCount = dcount(ContainerGroupName_s) by TimeBin = bin(TimeGenerated, 1m)
 | order by TimeBin asc
 | render timechart
 ```
@@ -184,7 +184,7 @@ http_scale_rule {
 
 The intentionally low threshold (10) means KEDA will trigger scaling quickly during the demo. Adjust via Terraform variables:
 
-```bash
+```PowerShell
 azd env set TF_VAR_max_replicas 20
 azd env set TF_VAR_http_concurrency_threshold 50
 azd provision
@@ -198,7 +198,7 @@ azd provision
 
 ## Clean Up
 
-```bash
+```PowerShell
 azd down
 ```
 

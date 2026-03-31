@@ -5,6 +5,6 @@
 ContainerAppConsoleLogs_CL
 | where ContainerAppName_s == "<CONTAINER_APP_NAME>"
 | where Log_s has "Request handled by replica"
-| summarize RequestCount = count() by Replica = ContainerGroupName_g, TimeBin = bin(TimeGenerated, 1m)
+| summarize RequestCount = count() by Replica = ContainerGroupName_s, TimeBin = bin(TimeGenerated, 1m)
 | order by TimeBin asc, Replica asc
 | render timechart

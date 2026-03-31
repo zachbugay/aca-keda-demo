@@ -1,9 +1,9 @@
-// Console logs grouped by replica (ContainerGroupName_g)
+// Console logs grouped by replica (ContainerGroupName_s)
 // Each replica has a unique name — request counts per replica
 // prove that traffic was distributed across scaled-out instances.
 // Replace <CONTAINER_APP_NAME> with your app name
 ContainerAppConsoleLogs_CL
 | where ContainerAppName_s == "<CONTAINER_APP_NAME>"
 | where Log_s has "Request handled by replica"
-| summarize RequestCount = count() by Replica = ContainerGroupName_g
+| summarize RequestCount = count() by Replica = ContainerGroupName_s
 | order by RequestCount desc

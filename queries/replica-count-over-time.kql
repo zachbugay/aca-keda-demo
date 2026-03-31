@@ -5,6 +5,6 @@
 // Replace <CONTAINER_APP_NAME> with your app name
 ContainerAppConsoleLogs_CL
 | where ContainerAppName_s == "<CONTAINER_APP_NAME>"
-| summarize ReplicaCount = dcount(ContainerGroupName_g) by TimeBin = bin(TimeGenerated, 1m)
+| summarize ReplicaCount = dcount(ContainerGroupName_s) by TimeBin = bin(TimeGenerated, 1m)
 | order by TimeBin asc
 | render timechart

@@ -1,6 +1,3 @@
-# --------------------------------------------------------------------------
-# Outputs consumed by azd
-# --------------------------------------------------------------------------
 output "AZURE_CONTAINER_REGISTRY_ENDPOINT" {
   value = azurerm_container_registry.acr.login_server
 }
@@ -13,9 +10,6 @@ output "SERVICE_API_ENDPOINT_URL" {
   value = "https://${azurerm_container_app.api.ingress[0].fqdn}"
 }
 
-# --------------------------------------------------------------------------
-# Useful references for KQL / CLI commands
-# --------------------------------------------------------------------------
 output "AZURE_RESOURCE_GROUP" {
   value = azurerm_resource_group.rg.name
 }

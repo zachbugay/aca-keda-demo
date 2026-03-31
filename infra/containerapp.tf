@@ -32,10 +32,11 @@ resource "azurerm_container_app" "api" {
   template {
     min_replicas = 0
     max_replicas = var.max_replicas
+    polling_interval_in_seconds = 30
 
     container {
       name   = "api"
-      image  = "${azurerm_container_registry.acr.name}.azurecr.io:latest/aca-keda-demo/api-dev:latest"
+      image  = "mcr.microsoft.com/k8se/quickstart:latest"
       cpu    = 0.25
       memory = "0.5Gi"
     }

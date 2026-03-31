@@ -7,9 +7,9 @@ services:
     language: dotnet
     host: containerapp
     docker:
+      image: aca-keda-demo/api-dev
       path: ./Dockerfile
       context: .
-      registry: mcr.microsoft.com
       remoteBuild: true
 infra:
   provider: terraform

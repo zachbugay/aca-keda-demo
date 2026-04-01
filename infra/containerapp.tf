@@ -49,7 +49,7 @@ resource "azurerm_container_app" "api" {
     # during a k6 load test.
     # ---------------------------------------------------------------
     http_scale_rule {
-      name                = "http-scaling"
+      name                = "http-scaling-example"
       concurrent_requests = var.http_concurrency_threshold
     }
   }

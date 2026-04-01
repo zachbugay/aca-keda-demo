@@ -25,18 +25,17 @@ locals {
   tags = {
     "azd-env-name" = var.environment_name
   }
-  resource_token   = replace(var.environment_name, "-", "")
-  deployment_token = random_string.deployment.result
+  resource_token   = "${var.environment_name}-${random_string.deployment.result}" 
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-${var.environment_name}-${local.deployment_token}"
+  name     = "rg-${var.environment_name}-${local.resource_token}"
   location = var.location
   tags     = local.tags
 }
 
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = "law-${var.environment_name}-${local.deployment_token}"
+  name                = "law-${var.environment_name}-${local.resource_token}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "PerGB2018"
@@ -45,7 +44,7 @@ resource "azurerm_log_analytics_workspace" "law" {
 }
 
 resource "azurerm_container_app_environment" "env" {
-  name                = "cae-${var.environment_name}-${local.deployment_token}"
+  name                = "cae-${var.environment_name}-${local.resource_token}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -60,7 +59,7 @@ resource "azurerm_container_app_environment" "env" {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = "acr${local.resource_token}${local.deployment_token}"
+  name                = "acr${replace(local.resource_token, "-", "")}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "Basic"
@@ -69,7 +68,7 @@ resource "azurerm_container_registry" "acr" {
 }
 
 resource "azurerm_user_assigned_identity" "acr_pull" {
-  name                = "id-acr-pull-${var.environment_name}-${local.deployment_token}"
+  name                = "uamid-acr-pull-${var.environment_name}-${local.resource_token}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = local.tags

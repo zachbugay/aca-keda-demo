@@ -1,19 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddLogging();
 
-var loggerFactory = builder.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
-var logger = loggerFactory.CreateLogger<Program>();
-
-logger.LogInformation("Begin setup...");
-
 var app = builder.Build();
+
+app.Logger.LogInformation("Begin setup...");
 
 app.MapGet("/", () =>
 {
     var machineName = Environment.MachineName;
     var timestamp = DateTime.UtcNow.ToString("o");
 
-    logger.LogInformation($"[{timestamp}] Request handled by replica: {machineName}");
+    app.Logger.LogInformation("[{Timestamp}] Request handled by replica: {MachineName}", timestamp, machineName);
 
     return Results.Ok(new
     {
@@ -25,5 +22,5 @@ app.MapGet("/", () =>
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
-logger.LogInformation("Setup complete. Running application!");
+app.Logger.LogInformation("Setup complete. Running application!");
 app.Run();

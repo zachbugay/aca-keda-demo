@@ -1,6 +1,6 @@
 # Azure Container Apps – KEDA HTTP Scaling Demo
 
-Demonstrates automatic horizontal scaling on Azure Container Apps using a **KEDA HTTP scaling rule**. A .NET 8 minimal API returns its machineName in every response, letting you observe requests distributing across replicas as the app scales out under load.
+Demonstrates automatic horizontal scaling on Azure Container Apps using a **KEDA HTTP scaling rule**. A .NET 10 minimal API returns its machineName in every response, letting you observe requests distributing across replicas as the app scales out under load.
 
 Provisioned entirely via **Azure Developer CLI (`azd`)** with **Terraform** as the IaC provider.
 
@@ -36,7 +36,7 @@ Provisioned entirely via **Azure Developer CLI (`azd`)** with **Terraform** as t
 | Terraform | >= 1.1.7 | <https://developer.hashicorp.com/terraform/install> |
 | Azure CLI (`az`) | >= 2.38 | <https://learn.microsoft.com/cli/azure/install-azure-cli> |
 | Docker Desktop | latest | <https://www.docker.com/products/docker-desktop/> |
-| .NET 8 SDK | 8.0+ | <https://dotnet.microsoft.com/download/dotnet/8.0> |
+| .NET 10 SDK | 8.0+ | <https://dotnet.microsoft.com/download/dotnet/8.0> |
 | k6 (Grafana) | latest | <https://k6.io/docs/get-started/installation/> |
 
 ## Quick Start
@@ -63,7 +63,7 @@ After `azd up` completes, grab the app URL:
 
 ```PowerShell
 # Print the app URL
-$ACA_ENDPOINT= $(azd env get-value SERVICE_API_ENDPOINT_URL)
+$ACA_ENDPOINT=$(azd env get-value SERVICE_API_ENDPOINT_URL)
 ```
 
 Verify it works:
@@ -171,8 +171,8 @@ The KEDA HTTP scale rule is defined in `infra/containerapp.tf`:
 
 ```hcl
 http_scale_rule {
-  name                = "http-scaling"
-  concurrent_requests = var.http_concurrency_threshold  # default: "10"
+  name                = "http-scaling-example"
+  concurrent_requests = var.http_concurrency_threshold
 }
 ```
 

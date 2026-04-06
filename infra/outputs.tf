@@ -25,3 +25,7 @@ output "AZURE_LOG_ANALYTICS_WORKSPACE_ID" {
 output "AZURE_CONTAINER_APP_NAME" {
   value = azurerm_container_app.api.name
 }
+
+output "AZURE_USER_ASSIGNED_IDENTITY_ID" {
+  value = azurerm_user_assigned_identity.acr_pull.id
+}

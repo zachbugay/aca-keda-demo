@@ -29,13 +29,13 @@ locals {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-${var.environment_name}-${local.resource_token}"
+  name     = "rg-${local.resource_token}"
   location = var.location
   tags     = local.tags
 }
 
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = "law-${var.environment_name}-${local.resource_token}"
+  name                = "law-${local.resource_token}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "PerGB2018"
@@ -44,7 +44,7 @@ resource "azurerm_log_analytics_workspace" "law" {
 }
 
 resource "azurerm_container_app_environment" "env" {
-  name                = "cae-${var.environment_name}-${local.resource_token}"
+  name                = "cae-${local.resource_token}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -68,7 +68,7 @@ resource "azurerm_container_registry" "acr" {
 }
 
 resource "azurerm_user_assigned_identity" "acr_pull" {
-  name                = "uamid-acr-pull-${var.environment_name}-${local.resource_token}"
+  name                = "uamid-acr-pull-${local.resource_token}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = local.tags

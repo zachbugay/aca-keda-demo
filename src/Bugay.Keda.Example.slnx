@@ -1,4 +1,3 @@
 <Solution>
   <Project Path="./Bugay.Api.Example/Bugay.Api.Example.csproj" />
-  <Project Path="./Bugay.Frontend.Example/Bugay.Frontend.Example.csproj" />
 </Solution>

@@ -25,10 +25,10 @@ obj/
 *.suo
 *.cache
 *.vs/
+wwwroot/
 
 # IDE
 .idea/
-.vscode/
 
 # OS
 Thumbs.db

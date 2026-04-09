@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "watch-frontend",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/src/Bugay.Frontend.Example/Bugay.Frontend.Example.csproj"
+            ],
+            "isBackground": true,
+            "problemMatcher": {
+                "base": "$msCompile",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "dotnet watch",
+                    "endsPattern": "Now listening on:"
+                }
+            }
+        }
+    ]
+}
